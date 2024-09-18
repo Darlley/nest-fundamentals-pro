@@ -4,23 +4,42 @@ import { UpdateSongDto } from './dto/update-song.dto';
 
 @Injectable()
 export class SongsService {
+  private songs: any[] = [];
+  private nextId = 1;
+
   create(createSongDto: CreateSongDto) {
-    return 'This action adds a new song';
+    const newSong = {
+      id: this.nextId++,
+      ...createSongDto,
+    };
+    this.songs.push(newSong);
+    return newSong;
   }
 
   findAll() {
-    return `This action returns all songs`;
+    return this.songs;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} song`;
+    return this.songs.find(song => song.id === id);
   }
 
   update(id: number, updateSongDto: UpdateSongDto) {
-    return `This action updates a #${id} song`;
+    const index = this.songs.findIndex(song => song.id === id);
+    if (index !== -1) {
+      this.songs[index] = { ...this.songs[index], ...updateSongDto };
+      return this.songs[index];
+    }
+    return null;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} song`;
+    const index = this.songs.findIndex(song => song.id === id);
+    if (index !== -1) {
+      const removedSong = this.songs[index];
+      this.songs.splice(index, 1);
+      return removedSong;
+    }
+    return null;
   }
 }

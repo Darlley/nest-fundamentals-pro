@@ -1,0 +1,28 @@
+### Criar uma nova música
+POST http://localhost:3000/songs
+Content-Type: application/json
+
+{
+  "title": "Garota de Ipanema",
+  "artists": ["Tom Jobim", "Vinícius de Moraes"],
+  "releasedDate": "1962-08-02",
+  "duration": "03:56"
+}
+
+### Listar todas as músicas
+GET http://localhost:3000/songs
+
+### Buscar uma música específica por ID
+GET http://localhost:3000/songs/1
+
+### Atualizar uma música existente
+PATCH http://localhost:3000/songs/1
+Content-Type: application/json
+
+{
+  "title": "Garota de Ipanema (Versão Remasterizada)",
+  "duration": "04:05"
+}
+
+### Remover uma música
+DELETE http://localhost:3000/songs/2
