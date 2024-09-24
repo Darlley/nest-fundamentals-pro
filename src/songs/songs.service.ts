@@ -30,20 +30,22 @@ export class SongsService {
   }
 
   update(id: number, updateSongDto: UpdateSongDto) {
-    const index = this.songs.findIndex((song) => song.id === id);
-    if (index !== -1) {
-      this.songs[index] = { ...this.songs[index], ...updateSongDto };
-      return this.songs[index];
-    }
-    return null;
+    let updatedSong = null;
+    this.songs = this.songs.map((song) => {
+      if (song.id === id) {
+        updatedSong = { ...song, ...updateSongDto };
+        return updatedSong;
+      }
+      return song;
+    });
+    return updatedSong;
   }
 
   remove(id: number) {
-    const index = this.songs.findIndex((song) => song.id === id);
-    if (index !== -1) {
-      const removedSong = this.songs[index];
-      this.songs.splice(index, 1);
-      return removedSong;
+    const songToRemove = this.songs.find((song) => song.id === id);
+    if (songToRemove) {
+      this.songs = this.songs.filter((song) => song.id !== id);
+      return songToRemove;
     }
     return null;
   }

@@ -25,4 +25,4 @@ Content-Type: application/json
 }
 
 ### Remover uma música
-DELETE http://localhost:3000/songs/2
+DELETE http://localhost:3000/songs/1

@@ -53,9 +53,12 @@ export class SongsController {
    * 
    * @param id O ID da música a ser atualizada.
    * @param updateSongDto Os dados atualizados da música.
+   * 
+   * Nota: O ParseIntPipe pode ser passado diretamente sem instanciar
+   * se não houver necessidade de customizar o erro da requisição.
    */
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateSongDto: UpdateSongDto) {
+  update(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id: number, @Body() updateSongDto: UpdateSongDto) {
     return this.songsService.update(+id, updateSongDto);
   }
 
@@ -63,9 +66,12 @@ export class SongsController {
    * Remove uma música.
    * 
    * @param id O ID da música a ser removida.
+   * 
+   * Nota: O ParseIntPipe pode ser passado diretamente sem instanciar
+   * se não houver necessidade de customizar o erro da requisição.
    */
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id: number) {
     return this.songsService.remove(+id);
   }
 }
