@@ -4,7 +4,7 @@
 - Tempo total: 13:56:29
 - Minuto atual: 18:12
 
-Estamos criando uma API de músicas 
+Estamos criando uma API de músicas (songs). 
 
 MIDDLEWARE
 

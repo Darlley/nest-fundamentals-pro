@@ -19,7 +19,7 @@ export class SongsController {
 
   /**
    * Cria uma nova música.
-   * 
+   *
    * @param createSongDto Os dados da música a ser criada.
    */
   @Post()
@@ -37,41 +37,60 @@ export class SongsController {
 
   /**
    * Busca uma música específica por ID.
-   * 
+   *
    * @param id O ID da música a ser buscada.
-   * 
+   *
    * Nota: O ParseIntPipe pode ser passado diretamente sem instanciar
    * se não houver necessidade de customizar o erro da requisição.
    */
   @Get(':id')
-  findOne(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id: number) {
+  findOne(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
     return this.songsService.findOne(+id);
   }
 
   /**
    * Atualiza uma música existente.
-   * 
+   *
    * @param id O ID da música a ser atualizada.
    * @param updateSongDto Os dados atualizados da música.
-   * 
+   *
    * Nota: O ParseIntPipe pode ser passado diretamente sem instanciar
    * se não houver necessidade de customizar o erro da requisição.
    */
   @Patch(':id')
-  update(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id: number, @Body() updateSongDto: UpdateSongDto) {
+  update(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+    @Body() updateSongDto: UpdateSongDto,
+  ) {
     return this.songsService.update(+id, updateSongDto);
   }
 
   /**
    * Remove uma música.
-   * 
+   *
    * @param id O ID da música a ser removida.
-   * 
+   *
    * Nota: O ParseIntPipe pode ser passado diretamente sem instanciar
    * se não houver necessidade de customizar o erro da requisição.
    */
   @Delete(':id')
-  remove(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id: number) {
+  remove(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
     return this.songsService.remove(+id);
   }
 }
