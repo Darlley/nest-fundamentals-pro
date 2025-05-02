@@ -70,5 +70,57 @@ export class SongsService {
 }
 ```
 
+Para validar o corpo da requisição (os dados enviados na body), com mensagens personalizadas para cada tipo de erro de tipo inválido. Para isto vamos criar DTO's. 
 
-`npm installc class-validator class-transformer` 
+Instale `npm install class-validator class-transformer` e eles fornecem decoradores para validação e o ValidationPipe. Mas para usa-los devemos registrar o ValidationPipe globalmente na `main.ts`. Adicione `app.useGlobalPipes(new ValidationPipe());` antes de `await app.listen(3000);` e importe o ValidationPipe.
+
+Crie seus DTO's no módulo especifico dentro da pasta `dto` (`src/songs/dto/songs.dto.ts`). Ele é uma classe com atributos (igual um type ou interface) mas cada atributo recebe um decorator da `class-validator` para validação: 
+
+```ts
+import { IsArray, IsDateString, IsMilitaryTime, IsNotEmpty, IsString } from 'class-validator';
+
+export class CreateSongDto {
+  @IsArray() // o atributo
+  @IsString({ each: true }) // cada item do atributo
+  @IsNotEmpty()
+  readonly artists: string[];
+
+  @IsNotEmpty()
+  @IsDateString() // ISO8601 -> YYYY-MM-DD
+  readonly releasedDate: string; 
+
+  @IsNotEmpty()
+  @IsMilitaryTime() // HH:MM
+  readonly duration: string; 
+}
+```
+
+Para aplicar as validações no controller você deve adicionar o decorator `@Body()` no método desejado e passar o DTO como parâmetro:
+
+
+```ts
+import { Body, Controller, Post } from '@nestjs/common';
+import { CreateSongDto } from './dto/create-song.dto';
+
+@Controller('songs')
+export class SongsController {
+  constructor(...) {}
+
+  @Post()
+  create(@Body() createSongDto: CreateSongDto) { .. }
+}
+```
+
+> [!NOTE]
+> Todo o trabalho manual feito até gora pode ser feito via CLI com o comando `nest g resource test`, existem opções para os comandos da CLI do Nest:
+> `--dry-run` ele vai retornar o que ele faria sem executar.
+> `--no-flat` ele não cria a pasta do recurso, ele cria todos os arquivos na pasta do módulo.
+> `--no-spec` ele não cria os arquivos de teste.
+
+### MIDLEWARE
+
+Um middleware é uma classe que implementa a classe nativa do Nestjs `NestMiddleware` e tem o método `use` que recebe o request, response e o next. O middleware é executado antes do controller e pode ser usado para validar requisições, autenticar usuários, etc.
+
+O middleware em `src/common/middleware/logger/logger.middleware.ts` é um exemplo simples de middleware com console.log das requisições e data. Para usar ele você deve importar ele no módulo principal `app.module.ts` (pode especificar se é para uma rota específica ou a para todas) e adicionar ele no `configure` do módulo principal.
+
+Para criar um novo middleware você pode usar o comando da CLI do nest `nest g mi <PATH>/logger --no-spec --no-flat` e ele criará o middleware e importará ele no módulo principal.
