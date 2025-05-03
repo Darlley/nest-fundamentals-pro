@@ -141,3 +141,29 @@ export class AppModule implements NestModule {
   }
 }
 ```
+
+### ERRORS
+
+O Neste fornece uma classe utilitária `throw new HttpException()` com erros customizados, que recebe a mensagem do erro e o STATUS_CODE que também oferece outra classe utilitária a `HttpStatus` e um objeto com a causa do erro que recebe o error do try/catch por exemplo:
+
+````ts
+@Controller(...)
+export class SongsController {
+  constructor(...) {}
+
+  @Get()
+  findAll() {
+    try{
+      return this.songsService.findAll();
+    } catch(error) {
+      throw new HttpException(
+        "server error", 
+        HttpStatus.INTERNAL_SERVER_ERROR, 
+        {
+          cause: error
+        }
+      )
+    }
+  }
+}
+```

@@ -19,9 +19,14 @@ export class SongsService {
   findAll() {
     try {
       return this.songs;
-    } catch (e) {
-      console.log('Controller@findAll', e);
-      throw new HttpException('server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      throw new HttpException(
+        'SongsService@findAll', 
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        {
+          cause: error
+        }
+      );
     }
   }
 
