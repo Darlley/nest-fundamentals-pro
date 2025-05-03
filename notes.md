@@ -146,7 +146,7 @@ export class AppModule implements NestModule {
 
 O Neste fornece uma classe utilitária `throw new HttpException()` com erros customizados, que recebe a mensagem do erro e o STATUS_CODE que também oferece outra classe utilitária a `HttpStatus` e um objeto com a causa do erro que recebe o error do try/catch por exemplo:
 
-````ts
+```ts
 @Controller(...)
 export class SongsController {
   constructor(...) {}
@@ -167,3 +167,72 @@ export class SongsController {
   }
 }
 ```
+
+### PIPES
+
+Usamos pipes em Nestjs para transformação de dados. Por padrão, os dados enviados via HTTP Request são recebidos como strings pelo servidor:
+
+
+```ts
+@Controller(...)
+export class SongsController {
+  constructor(...) {}
+
+  @Get(':id')
+  findOne(
+    @Param('id') id: number,
+  ) {
+    console.log(typeof id) // string
+  }
+}
+```
+
+Usando pipes podemos validar ou transformar estes dados strings em outros formatos, como números por exemplo, usadno `ParseIntPipe`:
+
+```ts
+@Controller(...)
+export class SongsController {
+  constructor(...) {}
+
+  @Get(':id')
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ) { ... }
+}
+```
+
+Também podemos customizar o erro do pipe instanciando ele:
+
+```ts
+import { HttpStatus, ParseIntPipe } from '@nestjs/common';
+
+@Controller(...)
+export class SongsController {
+  constructor(...) {}
+
+  @Get(':id')
+  findOne(
+    @Param(
+      'id',
+      new ParseIntPipe({ 
+        errorHttpStatusCode: 
+        HttpStatus.NOT_ACCEPTABLE 
+      }),
+    )
+    id: number,
+  ) { ... }
+}
+```
+
+Podemos criar nossos próprios pipes mas o Nestjs já fornece muitos:
+
+ValidationPipe
+ParseIntPipe
+ParseFloatPipe
+ParseBoolPipe
+ParseArrayPipe
+ParseUUIDPipe
+ParseEnumPipe
+DefaultValuePipe
+ParseFilePipe
+ParseDatePipe
