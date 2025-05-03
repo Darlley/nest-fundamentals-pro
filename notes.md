@@ -121,6 +121,23 @@ export class SongsController {
 
 Um middleware é uma classe que implementa a classe nativa do Nestjs `NestMiddleware` e tem o método `use` que recebe o request, response e o next. O middleware é executado antes do controller e pode ser usado para validar requisições, autenticar usuários, etc.
 
-O middleware em `src/common/middleware/logger/logger.middleware.ts` é um exemplo simples de middleware com console.log das requisições e data. Para usar ele você deve importar ele no módulo principal `app.module.ts` (pode especificar se é para uma rota específica ou a para todas) e adicionar ele no `configure` do módulo principal.
+O middleware em `src/common/middleware/logger/logger.middleware.ts` é um exemplo simples de middleware com console.log das requisições e data. Para usar ele você deve importar ele no módulo principal `app.module.ts` e adicionar ele no `configure` do módulo principal.
 
 Para criar um novo middleware você pode usar o comando da CLI do nest `nest g mi <PATH>/logger --no-spec --no-flat` e ele criará o middleware e importará ele no módulo principal.
+
+No `app.module.ts` também podemos especificar se o middleware é para uma rota (`.forRoutes('songs')`), para um controller (`.forRoutes(SongsController)`), e até para um método específico como no exemplo abaixo em que o middleware é disparado para requisições do tipo POST feita para rota `songs`:
+
+```ts
+import { 
+  MiddlewareConsumer, Module, NestModule, RequestMethod 
+} from '@nestjs/common';
+import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
+
+@Module(...)
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware)
+      .forRoutes({ path: 'songs', method: RequestMethod.POST });
+  }
+}
+```
